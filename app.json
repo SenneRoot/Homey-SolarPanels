@@ -74,6 +74,125 @@
   "drivers": [
     {
       "name": {
+        "en": "APsystems"
+      },
+      "class": "solarpanel",
+      "capabilities": [
+        "measure_power",
+        "meter_power"
+      ],
+      "images": {
+        "small": "/drivers/APsystems/assets/images/small.jpg",
+        "large": "/drivers/APsystems/assets/images/large.jpg"
+      },
+      "connectivity": [
+        "lan"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "pair": [
+        {
+          "id": "pair"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "capabilitiesOptions": {
+        "meter_power": {
+          "title": {
+            "en": "Energy yield (today)",
+            "nl": "Energieproductie (vandaag)"
+          }
+        },
+        "meter_power.total": {
+          "title": {
+            "en": "Energy yield (total)",
+            "nl": "Energieproductie (totaal)"
+          }
+        },
+        "measure_power": {
+          "title": {
+            "en": "Power",
+            "nl": "Vermogen"
+          }
+        }
+      },
+      "id": "APsystems",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "ASsystems ECU details"
+          },
+          "children": [
+            {
+              "id": "ecuId",
+              "type": "label",
+              "label": {
+                "en": "ECU ID"
+              }
+            },
+            {
+              "id": "ecuFirmware",
+              "type": "label",
+              "label": {
+                "en": "ECU Firmware version"
+              }
+            },
+            {
+              "id": "ecuIP",
+              "type": "label",
+              "label": {
+                "en": "ECU IP"
+              }
+            },
+            {
+              "id": "inverters",
+              "type": "label",
+              "label": {
+                "en": "Number of connected inverters"
+              }
+            }
+          ]
+        },
+        {
+          "id": "interval",
+          "type": "number",
+          "label": {
+            "en": "Update interval",
+            "nl": "Update interval"
+          },
+          "value": 5,
+          "min": 1,
+          "units": {
+            "en": "minutes",
+            "nl": "minuten"
+          }
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Advanced settings"
+          },
+          "hint": {
+            "en": "Advanced settings"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": {
         "en": "Enphase Enlighten"
       },
       "class": "solarpanel",

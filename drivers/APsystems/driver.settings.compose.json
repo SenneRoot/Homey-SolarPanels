@@ -1,0 +1,62 @@
+[
+  {
+    "type": "group",
+    "label": {
+      "en": "ASsystems ECU details"
+    },
+    "children": [
+      {
+        "id": "ecuId",
+        "type": "label",
+        "label": {
+          "en": "ECU ID"
+        }
+      },
+      {
+        "id": "ecuFirmware",
+        "type": "label",
+        "label": {
+          "en": "ECU Firmware version"
+        }
+      },
+      {
+        "id": "ecuIP",
+        "type": "label",
+        "label": {
+          "en": "ECU IP"
+        }
+      },
+      {
+        "id": "inverters",
+        "type": "label",
+        "label": {
+          "en": "Number of connected inverters"
+        }
+      }
+    ]
+  },
+  {
+    "id": "interval",
+    "type": "number",
+    "label": {
+      "en": "Update interval",
+      "nl": "Update interval"
+    },
+    "value": 5,
+    "min": 1,
+    "units": {
+      "en": "minutes",
+      "nl": "minuten"
+    }
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Advanced settings"
+    },
+    "hint": {
+      "en": "Advanced settings"
+    },
+    "children": []
+  }
+]
