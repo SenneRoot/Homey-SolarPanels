@@ -141,6 +141,11 @@ export default class APsystemsApi {
   }
 
   async getRealTimeData(): Promise<RealTimeData> {
+    // fetch ecu id from system info if unkown
+    if (!this.ecuID) {
+      this.ecuID = (await this.getSystemInfo()).id;
+    }
+
     const data = await this.sendCommandToECU(REQ_REAL_TIME_DATA + this.ecuID + REQ_END);
 
     if (validate_data(data, '0002')) {
@@ -172,7 +177,6 @@ export default class APsystemsApi {
     }
     else {
       throw new Error(`Received incorrect response from ECU: command: ${REQ_REAL_TIME_DATA + this.ecuID + REQ_END} response: ${data}`)
-
     }
   }
 }
