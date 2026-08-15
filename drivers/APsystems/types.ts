@@ -32,8 +32,13 @@ export interface RealTimeData {
 
 // Homey types
 export interface PairData {
-  ecuID: string;
+  ecuID?: string;
   ip: string;
+}
+
+export interface RepairData {
+  ip: string;
+  expectedEcuID?: string;
 }
 
 export interface Device {
@@ -49,4 +54,9 @@ export interface DeviceData {
 
 export interface DeviceSettings {
   interval?: number;
+  ecuId?: string;
+  ecuFirmware?: string;
+  ecuIP?: string;
+  inverters?: string;
+  invertersOnline?: string;
 }

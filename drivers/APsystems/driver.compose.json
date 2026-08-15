@@ -52,5 +52,10 @@
         "nl": "Vermogen"
       }
     }
-  }
+  },
+  "repair": [
+    {
+      "id": "repair"
+    }
+  ]
 }

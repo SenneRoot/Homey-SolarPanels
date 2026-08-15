@@ -36,7 +36,7 @@ export default class APsystemsApi {
         tag: 'ecuModel',
         choices: {
           0x01: Parser.start()
-            .array('lastTimeConnectedEMA', { type: 'uint8', length: 7 })
+            .array('lastTimeConnectedEMA', { type: 'uint8', length: 7, formatter: function (arr: any) { return aps_datetimestamp(arr); } })
             .int16('numberOfInverters')
             .int16('invertersOnline')
             .string('ecuChannel', { length: 2 })
@@ -129,7 +129,7 @@ export default class APsystemsApi {
         lifeTimeEnergy: parsedData.lifeTimeEnergy / 10,
         lastSystemPower: parsedData.lastSystemPower,
         currentDayEnergy: parsedData.currentDayEnergy / 100,
-        numberOfInverters: parsedData.inverters,
+        numberOfInverters: parsedData.numberOfInverters,
         invertersOnline: parsedData.invertersOnline,
         version: parsedData.firmware,
         timeZone: parsedData.timeZone

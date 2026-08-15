@@ -1,0 +1,108 @@
+<style type="text/css">
+  .homey-solarpanels-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .homey-solarpanels-submit-button {
+    margin-top: auto;
+  }
+
+  .homey-solarpanels-current {
+    margin-bottom: 1.5em;
+    color: var(--homey-color-text-light);
+  }
+</style>
+
+<form class="homey-form homey-solarpanels-form" onsubmit="onRepair(event)">
+  <h1 class="homey-title">Replace or reconnect ECU</h1>
+  <p class="homey-subtitle">
+    Connect this existing Homey device to an APsystems replacement ECU. The
+    Homey device itself is kept, so its existing history and Flows stay intact.
+  </p>
+
+  <div class="homey-solarpanels-current" id="current-ecu"></div>
+
+  <div class="homey-form-group">
+    <label class="homey-form-label" for="ip">ECU IP Address</label>
+    <input
+      class="homey-form-input"
+      type="text"
+      id="ip"
+      placeholder="192.168.3.86"
+      value=""
+      required
+    />
+  </div>
+
+  <button
+    class="homey-button-primary-full homey-solarpanels-submit-button"
+    type="submit"
+  >
+    Connect replacement ECU
+  </button>
+</form>
+
+<script type="application/javascript">
+  let currentEcu = {};
+
+  const loadCurrentEcu = async () => {
+    try {
+      currentEcu = await Homey.emit("get_current_ecu");
+
+      if (currentEcu.ip) {
+        document.getElementById("ip").value = currentEcu.ip;
+      }
+
+      const details = [];
+      if (currentEcu.ecuID) details.push(`ECU ${currentEcu.ecuID}`);
+      if (currentEcu.ip) details.push(currentEcu.ip);
+
+      document.getElementById("current-ecu").textContent = details.length
+        ? `Currently configured: ${details.join(" at ")}`
+        : "No current ECU details are available.";
+    } catch (error) {
+      document.getElementById("current-ecu").textContent =
+        "Unable to read the current ECU configuration.";
+    }
+  };
+
+  const onRepair = async (event) => {
+    event.preventDefault();
+
+    const ip = document.getElementById("ip").value.trim();
+    if (!ip) {
+      await Homey.alert("Please enter an ECU IP address", "error");
+      return;
+    }
+
+    Homey.showLoadingOverlay();
+
+    try {
+      const replacement = await Homey.emit("validate_repair", { ip });
+      Homey.hideLoadingOverlay();
+
+      const oldId = currentEcu.ecuID || "the current ECU";
+      const confirmed = await Homey.confirm(
+        `Found ECU ${replacement.id} at ${ip}. Replace ${oldId} with this ECU?`,
+        "warning"
+      );
+
+      if (!confirmed) return;
+
+      Homey.showLoadingOverlay();
+      await Homey.emit("replace_ecu", {
+        ip,
+        expectedEcuID: replacement.id,
+      });
+      Homey.hideLoadingOverlay();
+      Homey.done();
+    } catch (error) {
+      Homey.hideLoadingOverlay();
+      await Homey.alert(error.message || String(error), "error");
+    }
+  };
+
+  loadCurrentEcu();
+</script>

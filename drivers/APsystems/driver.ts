@@ -1,9 +1,19 @@
-import { Driver } from "homey";
+import { Device as HomeyDevice, Driver } from "homey";
 import PairSession from "homey/lib/PairSession";
 
-import ASsystemsApi from "./api";
-import { PairData, Device } from "./types";
 import APsystemsApi from "./api";
+import {
+  PairData,
+  Device,
+  DeviceData,
+  DeviceSettings,
+  RepairData,
+  SystemInfo,
+} from "./types";
+
+type RepairableAPsystemsDevice = HomeyDevice & {
+  replaceEcu(ip: string, expectedEcuID?: string): Promise<SystemInfo>;
+};
 
 class ASsystemsDriver extends Driver {
   ecuID?: string;
@@ -17,7 +27,7 @@ class ASsystemsDriver extends Driver {
       this.ecuID = ecuID;
       this.ip = ip;
 
-      return new ASsystemsApi(this.ip, this.ecuID).getSystemInfo();
+      return new APsystemsApi(this.ip, this.ecuID).getSystemInfo();
     });
 
     session.setHandler("list_devices", async () => {
@@ -45,6 +55,40 @@ class ASsystemsDriver extends Driver {
       return devicesList;
     });
   }
+  async onRepair(session: PairSession, device: HomeyDevice) {
+    const apsystemsDevice = device as RepairableAPsystemsDevice;
+
+    session.setHandler("get_current_ecu", async () => {
+      const settings = device.getSettings() as DeviceSettings;
+      const data = device.getData() as DeviceData;
+
+      return {
+        ip: settings.ecuIP || data.ip,
+        ecuID: settings.ecuId || data.ecuID,
+      };
+    });
+
+    session.setHandler("validate_repair", async (data: RepairData) => {
+      const ip = data.ip.trim();
+      if (!ip) {
+        throw new Error("Please enter an ECU IP address");
+      }
+
+      this.homey.log(`Validating replacement APsystems ECU at ${ip}`);
+      return new APsystemsApi(ip).getSystemInfo();
+    });
+
+    session.setHandler("replace_ecu", async (data: RepairData) => {
+      const ip = data.ip.trim();
+      if (!ip) {
+        throw new Error("Please enter an ECU IP address");
+      }
+
+      this.homey.log(`Replacing APsystems ECU with ECU at ${ip}`);
+      return apsystemsDevice.replaceEcu(ip, data.expectedEcuID);
+    });
+  }
+
 }
 
 module.exports = ASsystemsDriver;

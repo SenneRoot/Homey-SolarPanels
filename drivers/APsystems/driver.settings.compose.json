@@ -10,28 +10,42 @@
         "type": "label",
         "label": {
           "en": "ECU ID"
-        }
+        },
+        "value": ""
       },
       {
         "id": "ecuFirmware",
         "type": "label",
         "label": {
           "en": "ECU Firmware version"
-        }
+        },
+        "value": ""
       },
       {
         "id": "ecuIP",
         "type": "label",
         "label": {
           "en": "ECU IP"
-        }
+        },
+        "value": ""
       },
       {
         "id": "inverters",
         "type": "label",
         "label": {
-          "en": "Number of connected inverters"
-        }
+          "en": "Number of connected inverters",
+          "nl": "Aantal verbonden omvormers"
+        },
+        "value": ""
+      },
+      {
+        "id": "invertersOnline",
+        "type": "label",
+        "label": {
+          "en": "Number of inverters online",
+          "nl": "Aantal omvormers online"
+        },
+        "value": ""
       }
     ]
   },
